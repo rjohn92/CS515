@@ -1,1 +1,154 @@
+from turtle import right
+
+
+def spiral(L):
+    #find the necessary elements for this project. We need to know
+    #the number of elements in the potential spiral. We start 
+    #at the topRow at the left most column. This is where the spiral
+    #starts. Then it runs across the first top row. 
+    numElements = 0
+    numRows= len(L)
+    thisRow = 0
+    leftColumn = 0
+    rightColumn = len(L[0])-1
+    #the bottow row is represented as the number of rows in the matrix. 
+    bottomRow = numRows-1
+
+    # create our new list populated with the finish spiral
+    spiraled = []
+
+   #make sure we have constraints on the top rows. Have to know the 
+   #top row is less than bottom row AND left column is still less than
+   #the right column.This main loop will wrap the rest of our loops up
+    while thisRow<=bottomRow and leftColumn<=rightColumn:
+        topRow=leftColumn
+        #the first loop will snatch us our topRow. Just  go from
+        #left to right and make sure to iterate the topRow variable 
+        #by one each  time.
+        while topRow < rightColumn+1:
+            spiraled.append(L[thisRow][topRow])
+            topRow+=1
+        #next lets add 1 to the top row because we are done with the 
+        #top row. 
+        thisRow=thisRow+1
+
+        #let's now go under the top row and get the rightt column. We have
+        #to remember we finished the above row. So we must now go down that
+        #column by one. A simple +1 will solve that
+        z= thisRow
+        while z <bottomRow+1:
+            spiraled.append(L[z][rightColumn])
+            z+=1
+        rightColumn=rightColumn-1
+
+        #now let's snatch the bottom row. We have to remember to traverse
+        #backwards. 
+        if thisRow<=bottomRow:
+            w = rightColumn
+            while w>leftColumn-1:
+                spiraled.append(L[bottomRow][w])
+                w-=1
+        bottomRow=bottomRow-1
+
+        #now we just have  to continue the while loop and find the rest of the
+        #spiral. We use pretty much  the  same logic as before. WE will  
+        #continue if the logic in the top loop is not met. 
+        if leftColumn<=rightColumn:
+            q = bottomRow
+            while q>thisRow-1:
+                spiraled.append(L[q][leftColumn])
+                q=-1
+        leftColumn=leftColumn+1
+    
+    return spiraled
+
+
+print(spiral([[1,2,3],[4,5,6],[7,8,9]]))
+print(spiral([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]))
+
+
+def inverter(D):
+    # new dictionary is created and will be populated
+    reversedDict = {}
+    # we will take the items in the current dictionary and if the
+    # end up appearing in the reversed dictionary we as a key we
+    # will add the element switched key to it
+    #
+    for i, j in D.items():
+        if j in reversedDict:
+            reversedDict[j].append(i)
+            # if the the key is not there then we simply switch
+            # the key and value
+        elif j not in reversedDict:
+            reversedDict[j] = [i]
+            
+    return reversedDict
+
+print(inverter({1: 'a', 2: 'b', 3: 'c'}))
+print(inverter({1: 'a', 2: 'a', 3: 'b'}))
+
+def matrixMultiply(A, B):
+    # columns in the first matrix must equal the number of rows in
+    # matrix B for it to be valid.
+    
+    result = []
+    rowsA = len(A)
+    columnsA = len(A[0])
+    rowsB = len(B)
+    columnsB = len(B[0])
+    try:
+         #check to see if matrix mult is possible
+        if rowsA == columnsB:
+            #We first must create the dimensions for our answer
+        #matrix. For every column we have we will clearly have 
+        #to have a row to match.
+            i = 0
+            while i <columnsB:
+                #just get the number of rows in A and append that
+                #many [0] elements for as many elements as there are
+                result.append([0]*rowsA)
+                i+=1
+            
+            #for all the rows in the A matrix
+            for j in range(rowsA):
+                #then get all the columns in B as per matrix mult 
+                #rules
+                for k in range(rowsA):
+                    #we still have to remember to get the rows as well
+                    for l in range (rowsB):
+                        #since our original grid is determined by the rows in A represented by
+                        #j and the columns in B represented by k. We then just need to add
+                        #the rows in matrix multiplication for A and  remember to iterate  
+                        #through the l range. However we also need to remember to go through
+                        #all the rows in B matrix. Same logic applies for B matrix.
+                        result[j][k]+=A[j][l]*B[l][k]
+                        
+    except ArithmeticError:
+        return "These lengths are incompatible"  
+    return result
+
+
+print(matrixMultiply([[1, 2, 3], [4, 5, 6]], [[1, 2], [3, 4], [5, 6]]))
+print(matrixMultiply([[3,3,3],[3,3,3,]],[[3]]))
+
+
+
+def twoSum(L, t):
+    # create a new list to add to
+    numsList = []
+    # for every element in the list L...
+    for i in range(len(L)-1):
+        # for every element from the first index in list L...
+        for j in range(i+1, len(L)):
+            # if the target minus the first value is equal to the second value
+            # we will just convert to a tuple and add the indexes to our list
+            if t-L[i] == L[j]:
+                numsList.append(tuple((L[i], L[j])))
+    return numsList
+
+
+print(twoSum([1, 2, 3, 4, 5], 4))
+print(twoSum([1, 2, 2, 3, 4, 5], 4))
+
+
 
