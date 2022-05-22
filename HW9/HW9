@@ -1,1 +1,162 @@
+from audioop import reverse, tostereo
+from decimal import DivisionByZero
+from math import pi
+import math
 
+
+from queue import Empty
+import copy
+
+"""Question1"""
+def twoMaxes(L):
+
+    numRows = len(L)
+    copyCols = []
+    colMax = []
+    maxRows = []
+    i= 0
+    z = 0
+    max = 0
+    currentMax =0
+    """
+    while i < numRows:
+        rowCopy = L[i]
+        rowCopy.sort(reverse=True)
+        maxRows.append(rowCopy[0])
+        i+=1
+    """
+    #have to make a deepcopy of the list so we don't change the original pointts
+    listCopy = copy.deepcopy(L)
+    #while we are doing this for the rows
+    while i < numRows:
+        rowCopy = listCopy[i]
+        rowCopy.sort(reverse=True)
+        maxRows.append(rowCopy[0])
+        i+=1
+    i=0
+        
+    
+    for x in range(0,len(L)):
+        max =0
+        for y in range(0,len(L)):
+            if L[y][z]>max:
+                max=L[y][z]
+        colMax.append(max)
+        z+=1
+        
+
+        
+    return [maxRows, colMax]
+
+''''
+4 3      1  2       4  3    
+5 1      3  4       5  1
+
+
+1  8  3
+4  5  9
+7  2  6
+'''
+
+inputList1  = [[1,2],[3,4]]
+revereseList = [[4,3],[5,1]]
+maxList = [[1,8,3],[4,5,9],[7,2,6]]
+print(twoMaxes(inputList1))
+print(twoMaxes(maxList))
+print(twoMaxes(revereseList))
+
+"""Question 2"""
+def dictionaryCollector(L):
+    
+    nums = 0
+    myString =''
+    myDict = {'int': nums, 'string': myString}
+    for elem in L:
+        if isinstance(elem, int)==True and isinstance(elem,bool)==False:
+            nums+=elem
+        elif isinstance(elem,str)==True:
+            myString+=elem
+        
+    return {'int': nums,'string': myString}
+
+thisList = [True, 1, 4, 5, "hello", 10, "10", "world"]
+switchedUpList = [1,False, True, "hello" ,"10",10, "world", 5, 4]
+noNums = [True, "hello", False,"10", "world"]
+noWords = [10,False, 1, 4, True,5]
+print(dictionaryCollector(['hello','bye']))
+print(dictionaryCollector(thisList))
+print(dictionaryCollector(switchedUpList))
+print(dictionaryCollector(noNums))
+print(dictionaryCollector(noWords))
+
+
+odd=[]
+even = []
+
+"""Question 3"""
+def separateNumbers(L):
+    length = len(L)
+    i=0
+    #base case
+    if length ==0:
+        return [[],[]]
+    else:
+        
+        if L[i]%2==0:
+            even.append(L[i]),separateNumbers(L[i+1:])
+            
+        elif L[i]%2!=0:
+            odd.append(L[i]),separateNumbers(L[i+1:])
+            
+    return [odd, even]
+
+toSeperate=[1,2,3,4,5,6,7,8,9,10]
+print(separateNumbers(toSeperate))
+
+
+"""Question 4"""
+class Circle(object):
+    def __init__(self,radius):
+        self.radius = radius
+    def __str__(self):
+        return "Radius: "+str(self.radius)
+
+    def area(self):
+        return pi*self.radius*self.radius
+    
+class Sphere(Circle):
+    def area(self):
+        return 4* pi * self.radius**2
+    def volume(self):
+        return 4/3 * pi* self.radius**3
+
+c = Circle(3)
+print((c))
+s= Sphere(4)
+print(c.area())
+print(s.area())
+print(s.volume())
+print(Sphere(4))
+
+
+"""Question 5"""
+def preciseDivision(a,b):
+    #try to divide a by b
+    try:
+        a/b
+    #if we try to divide by zero throw error
+    except ZeroDivisionError:
+        return float(math.inf)
+    #if we have any other issues just return None
+    except Exception:
+        return None
+    #if we are good to run the program just return the division up to the next 2 decimals points
+    else:
+        ans = a/b
+        return ans
+
+
+print(preciseDivision(5,0))
+print(preciseDivision("hello","hi"))
+print(preciseDivision(3,2))
+print(preciseDivision(1,.3))
