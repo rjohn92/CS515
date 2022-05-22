@@ -1,1 +1,44 @@
+from ast import Index
+from operator import index
+from cs515 import map, filter
 
+def correctName(s):
+    #get the whitespace separating the names
+    def whiteSpace(y):
+        x = s.index(' ')
+        return x
+    #convert all the letters to lowercase first. we only need 2 uppers
+    def convertToLower(a):
+        return s.lower()
+        #get the first name and convert to name case
+    def firstName(z):
+        x = convertToLower(s)
+        return x[0].upper()+x[1:whiteSpace(x)+1]
+        #get the last name and convert to name case
+    def lastName(w):
+        x = convertToLower(s)
+        return x[whiteSpace(x)+1].upper()+x[whiteSpace(x)+2:]
+    return firstName(s) + lastName(s)
+   
+print(correctName('RolanD joHn'))
+print(correctName('jared bass'))
+print(correctName('franklin shack'))
+print(correctName('jOE sMITH'))
+
+
+def stringShortener(s,n):
+    #return the starting character up to the index n noninclusive
+    return s[0:n]
+print(stringShortener('jared bass', 4))
+print(stringShortener('franklin',100))
+
+
+def changeList(L,n):
+    #make a newList thatt is equal to L
+    newList = L
+    #get the variable of L[n] then just add that value to the newlist
+    newList.append(L[n])
+    return newList
+print(changeList([1,2,3,4,5],0))
+print(changeList([1,621],1))
+print(changeList([0,8, 15, 1992],2))
