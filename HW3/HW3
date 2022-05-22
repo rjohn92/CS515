@@ -1,1 +1,71 @@
+import introcs
+
+def convert_time(alist):
+    if len(alist) == 1:
+        return alist[0]
+    elif len(alist) == 2:
+        return (60 * alist[0]) + (alist[1])
+    elif len(alist) == 3:
+        return (60 * 60 * alist[0]) + (60 * alist[1]) + alist[2]
+    elif len(alist) == 4:
+        return (86400 * alist[0]) + (3600 * alist[1]) + (60 * alist[2]) + alist[3]
+
+
+print(convert_time([1, 5]))
+print(convert_time([1, 2, 3]))
+print(convert_time([5]))
+print(convert_time([1, 0, 0, 0]))
+
+
+def last_name_first(n):
+    """
+        A single, non-working function.
+        The function in this module has a bug (in the sense that it does not
+satisfy its specification). This allows us to show off debugging.
+        Returns: copy of n but in the form 'last-name, first-name'
+        Parameter n: the person's name
+        Precondition: n is in the form 'first-name last-name'
+        with one or more blanks between the two names no spaces in <first-name> or
+<last-name>
+    """
+    #find the whitespace between words
+    end_first = n.find(' ')
+    #we just disregard the rest of the whitespace in the string. We only need the one whitespace to separate names
+
+    #go from the whitespace all the way to the beginning
+    first = n[:end_first]
+    #go from the whitespace to the end of the string
+    last = n[end_first + 1:].strip()
+
+    return last + ', ' + first
+
+print(last_name_first("Roland    John      "))
+print(last_name_first("Jared                                 Bass"))
+#double space between first and last name is a bug
+(introcs.assert_equals("John, Roland", last_name_first("Roland      John")))
+print(last_name_first("Roland J"))
+
+
+def sortnum(alist):
+    newlist = [alist[0]]
+    if alist[1] > newlist[0]:
+        newlist.append(alist[1])
+    else:
+        newlist.insert(0, alist[1])
+    if alist[2] >= newlist[1]:
+        newlist.append(alist[2])
+    elif alist[2] >= newlist[0] and alist[2] < newlist[1]:
+        newlist.insert(1, alist[2])
+    elif alist[2] <= newlist[0]:
+        newlist.insert(0, alist[2])
+    return newlist
+
+
+print(sortnum([2, 1, 3]))
+print(sortnum([1, 2, 3]))
+print(sortnum([3, 1, 2]))
+print(sortnum([3, 3, 0]))
+print(sortnum([3, 1, 3]))
+print(sortnum([3, 3, 3]))
+print((sortnum([5,-1,0])))
 
