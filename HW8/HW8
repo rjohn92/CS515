@@ -1,1 +1,166 @@
+import numbers
+from random import randint
+import random
+from tracemalloc import start
+from unittest.util import sorted_list_difference
+import time
+import sys
+sys.setrecursionlimit(100000000)
 
+
+def random_numbers_generator(num=1000, min=0, max=10000):
+    '''
+    create a nums variable that will be in the range of min/max that
+    is given. 
+    '''
+    nums = [random.randrange(min, max) for elem in range(num)]
+    return nums 
+
+print(random_numbers_generator(num = 3, min = 0, max = 10))
+
+def insertion_sort(random_list):
+    '''
+    we start at the second element at index 1in the array because 
+    we know that any list with one element is technically already
+     sorted. Thus we are unconcerned with the first element at index 0 
+    '''
+    sorted_list =random_list[:]
+
+    for index in range(1, len(random_list)):
+        #start iterating at index 1. value we want to check is list[i]
+        value = random_list[index]
+        #i will equal the index directly to the left
+        i = index-1
+        #while the index to the left is greater than  zero we will
+        #continue this while loop to look for 
+        while i >=0:
+            if value<random_list[i]:
+                random_list[i+1]=random_list[i]
+                temp = random_list
+                random_list[i]=value
+                i=i-1
+            
+            else:
+                break
+    """""
+    I have no idea why but my variables keep on getting 
+    swapped during implementation. Thus I have been forced
+    to implement a simple swapping procedure
+    """""
+    temp = sorted_list
+    sorted_list=random_list
+    random_list=temp
+    
+    return random_list, sorted_list
+
+print(insertion_sort(random_numbers_generator(num=1,min=1,max=10)))
+print(insertion_sort(random_numbers_generator(num =5, min =1, max =10)))
+
+#for Question 3 we must first pick our pivot point. That will be the first element
+def Quick_sort_first(random_list):
+    sorted_list=[]
+    lessThanPivot = []
+    equalToPivot = []
+    greaterThanPivot = []
+    length = len(random_list)
+    
+    """
+    if the length of the list is less than or equal to 1 then
+    we simply set the sorted_list to the random_list because 
+    any empty or lists with one element can be thought of as
+    already sorted.
+    """
+    if length<=1:
+        sorted_list=random_list
+        return random_list, sorted_list
+    """
+    if the length is greater than 1 then we have to start using
+    our pivot. We set the pivot to the first element as we are ordered
+    by the professor. Simply random_list[0] for the first element in the list.
+    """
+    if length> 1:
+        pivot = random_list[0]
+        i = 0
+        """
+        If the element at random_list[i] is less than the pivot then we will
+        append the elements there. We will follow this logic everywhere
+        """
+        while i<length:
+            if random_list[i] < pivot:
+                lessThanPivot.append(random_list[i])
+            
+            if random_list[i] == pivot:
+                equalToPivot.append(random_list[i])
+            
+            if random_list[i] > pivot:
+                greaterThanPivot.append(random_list[i])
+            i+=1
+
+        sorted_list = Quick_sort_first(lessThanPivot)[1] + equalToPivot + Quick_sort_first(greaterThanPivot)[1] 
+
+        return random_list, sorted_list
+
+print("Quick sort first: [with one element]")
+print(Quick_sort_first(random_numbers_generator(num=1, min=0,max=10)))
+print("Quick sort first:")
+print(Quick_sort_first(random_numbers_generator(num=5, min=0, max =10)))
+
+def Quick_sort_random(random_list):
+    sorted_list=[]
+    lessThanPivot = []
+    equalToPivot = []
+    greaterThanPivot = []
+    length = len(random_list)
+    
+    """
+    if the length of the list is less than or equal to 1 then
+    we simply set the sorted_list to the random_list because 
+    any empty or lists with one element can be thought of as
+    already sorted. (Same as the first quick sort problem above)
+    We do not need to worry about any pivoting here.
+    """
+    if length<=1:
+        sorted_list=random_list
+        return random_list, sorted_list
+    elif length>1:
+        pivot= random.randint(0, length-1)
+        i = 0
+        while i<length:
+            if random_list[i]<pivot:
+                lessThanPivot.append(random_list[i])
+            if random_list[i]==pivot:
+                equalToPivot.append(random_list[i])
+            if random_list[i]>pivot:
+                greaterThanPivot.append(random_list[i])
+            i+=1
+
+    """
+    We can use recursion here to break up the problem. This will 
+    continue until we hit our base case of length<=1
+    """
+    sorted_list = Quick_sort_first(lessThanPivot)[1] + equalToPivot+ Quick_sort_first(greaterThanPivot)[1] 
+    return random_list, sorted_list
+
+print("Random pivot quick sort: [with one element]")
+print(Quick_sort_random(random_numbers_generator(num = 1, min=0, max = 10)))
+print("Random pivot quick sort: [with multiple elements]")
+print(Quick_sort_random(random_numbers_generator(num = 5, min=0, max = 10)))
+
+
+Start = time.time()
+Random_list = random_numbers_generator(num=10000, min=1, max=10000)
+print("Generating random list, time {} " .format(time.time()- Start))
+
+Start = time.time()
+_, sorted_list = insertion_sort(Random_list)
+print("Sort random list by insertion {} " .format(time.time()- Start))
+
+Start = time.time()
+_, sorted_list = Quick_sort_first(Random_list)
+print("Sort random list by Quick Sort using the first as pivot, time {} " .format(time.time()- Start))
+
+Start = time.time()
+_, sorted_list = Quick_sort_random(Random_list)
+print("Sort random list by Quick Sort using a random num as pivot, time {} " .format(time.time()- Start))
+
+    
