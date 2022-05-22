@@ -1,1 +1,187 @@
+from random import randint
+from re import X
+from tkinter import Y
+from traceback import print_tb
 
+######ROLAND JOHN######
+#days in month
+DIM = [0,31,28,31,30,31,30,31,31,30,31,30,31]
+
+class Date(object):
+    def __init__(self,month, day,year):
+        self.month = month
+        self.day = day
+        self.year = year
+    def getMonth(self):
+        return self.month
+    def getDay(self):
+        return self.day
+    def getYear(self):
+        return self.year
+    def __str__(self):
+        return "{:02d}/{:02d}/{}".format(self.getMonth(), self.getDay(), self.getYear())
+
+    def isEqual(self,d2):
+        """""
+        We simply check if these variables are the same: 
+        the year 
+        the day 
+        the month 
+        """""
+        if self.getYear() == d2.getYear() and self.getDay() == d2.getDay() and self.getMonth() ==d2.getMonth():
+            return True
+        else:
+            return False
+
+    def isLeapYear(self):
+        """""
+        we have to follow the formula for a leap year. I found the
+        formula on google.
+        """""
+        #if this is a century year but is not divisible by 400
+        #then 
+        if self.getYear() % 100 ==0 and self.getYear()%400==0:
+            return True
+        if self.getYear()%100 ==0 and self.getYear()%400!=0:
+            return False
+        if self.getYear() % 4 == 0:
+            return True
+        else:
+            return False
+
+    def isBefore(self, d2):
+        """""
+        Use the isEqual func initially to find if the two days have 
+        any distance between them. If the days are equal then obviously
+        they cannot be the same. Otherwise we see if the years are the
+        same. If self has a year before other then it is before. Else it
+        is not and we return false. 
+
+        Otherwise we start to use our while loop to check if the year is
+        the same. If the self month is greater than other then we know 
+        it is not before because the years are already the same. Next we
+        see if the days are the same while holding the month and year 
+        as the same. If self is greater then it is false. otherwise 
+
+        """""
+        if self.isEqual(d2)==True:
+            return False
+        if self.year<d2.year:
+            return True
+        elif self.year>d2.year:
+            return False
+        #if we have the same month then we enter this while loop
+        while self.getYear()==d2.getYear():
+            #check to see if the given day is less than d2's Day. if
+            #it is we will return True
+            if self.getMonth()>d2.getMonth():
+                return False
+            elif self.getDay()> d2.getDay():
+                return False
+            else:
+                return True
+    
+    def tomorrow(self):
+        """""
+        Write the day for the next day after the current day
+        that we have been given
+        """""
+        if self.isLeapYear()==True:
+            DIM[2] = [29]
+        #if it's new year's eve then obviously  the next day will
+        #be 01/01/self.year +1. 
+        if self.month ==12 and self.day ==31:
+            self.day=1
+            self.month = 1
+            self.year+=1
+        if self.day>= DIM[self.month] and self.month>=12:
+            self.day=1
+            self.month = 1
+            self.year += 1
+        elif self.day >= DIM[self.month]:
+            self.day = 1
+            self.month +=1
+        else:
+            self.day += 1
+
+    def dayOfWeek(self):
+        #returns a string that indicates the name of the day of the week of
+        #the Date object that calls it.
+        
+        dayNames = ['Monday', 'Tuesday', 'Wednesday','Thursday', 'Friday',
+        'Saturday', 'Sunday']
+        
+       
+        formulaMonths = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]
+        self.year -= self.month < 3
+        """
+        result = (self.day + (int((13*(self.month-2))/5))+self.year+(int(self.year/4))-(int(self.year/100))-(int(self.year/400)))%7
+        return dayNames[int(result)+1]
+          return dayNames[(int(self.year + int(self.year/4) - int(self.year/100) + int(self.year/400) + formulaMonths[self.month-1] + self.day) % 7)]
+
+        """
+       
+        if self.month<3:
+        
+            self.year-=1
+        result = (self.day + (int((13*(self.month-2))/5))+self.year+(int(self.year/4))-(int(self.year/100))-(int(self.year/400)))%7
+        return dayNames[int(result)+1]
+       
+    def daysApart(self,other):
+        """""
+        This function will count the number of days between two given
+        days. We will make a copy of each day. To find the difference
+        we will use our tomorrow function. This will bring the days
+        closer together. As we get closer in dates we will increment
+        the difference variable which starts at 0.
+        """""
+        #if the year is the same and the month is the same just find
+        #the difference between the days.
+        difference = 0
+        if self.isEqual(other)==True:
+            return 0
+        if self.month==other.month and self.year == other.year:
+            return abs(self.day-other.day)
+        if self.isBefore(other)==True:
+            new_self = self
+            while new_self.isBefore(other)==True:
+               new_self.tomorrow()
+               difference+=1
+        elif self.isBefore(other)==False:
+            new_other = other
+            while new_other.isBefore(self)==True:
+                new_other.tomorrow()
+                difference+=1
+        return difference
+
+class QuantumDate(Date):
+    def randomize(self):
+        self.month=randint(0, 12)
+        if self.month ==1 or self.month ==3 or self.month ==5 or self.month ==7  or self.month ==8  or self.month ==10 or self.month ==12:
+            self.day = randint(0, 31)
+        elif self.month == 9 or self.month == 4 or self.month ==6 or self.month ==11:
+            self.day = randint(0, 30)
+        else:
+            self.day = 28
+        while QuantumDate.isLeapYear()==True or QuantumDate<=0:
+            self.year = randint()
+    def __str__(self):
+        return "{:02d}/{:02d}/{}".format(self.getMonth(), self.getDay(), self.getYear())
+
+    
+        
+
+
+d1 = Date(12,25,2022)
+d2 = Date(8,15,1992)
+d3 = Date(12,31,2022)
+d6 = Date(4,11,2022)
+d4 = Date(1,1,2025)
+d5 = Date(12,1,2025)
+
+print(d1.dayOfWeek())
+print(d2.dayOfWeek())
+print(d3.dayOfWeek())
+
+print(d4.dayOfWeek())
+print(d6.dayOfWeek())
